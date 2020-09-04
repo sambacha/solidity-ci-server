@@ -1,0 +1,66 @@
+buildscript {
+    ext.kotlin_version = '1.3.61'
+    repositories { jcenter() }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
+    }
+}
+
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.3.61'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+    id 'com.diffplug.gradle.spotless' version '3.26.0'
+}
+apply plugin: 'kotlinx-serialization'
+
+
+group 'tech.richardson'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven { setUrl("https://dl.bintray.com/hotkeytlt/maven") }
+    jcenter()
+    mavenLocal()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
+            'org.web3j:web3j-sokt:0.2.0',
+            "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0"
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+jar {
+    from {
+        configurations.compile
+                .collect {
+                    it.isDirectory() ? it : zipTree(it)
+                }
+    }
+    manifest {
+        attributes 'Main-Class': 'tech.richardson.svm.MainKt'
+    }
+}
+
+spotless {
+    kotlin {
+        target fileTree('.') {
+            include '**/*.kt'
+            exclude '**/.gradle/**'
+        }
+
+        ktlint()
+        trimTrailingWhitespace()
+        endWithNewline()
+
+    }
+}

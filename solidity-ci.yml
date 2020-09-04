@@ -1,0 +1,7 @@
+# solidity-ci.yml configuration
+
+solidity-pragma:
+    strict: true
+    config:
+        # eg. 0.6.0 only
+        pragma solidity >=0.5.0 <0.6.0;
