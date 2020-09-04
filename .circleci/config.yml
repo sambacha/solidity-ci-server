@@ -1,0 +1,15 @@
+# CircleCI Configuration
+version: 2
+jobs:
+  build:
+    docker:
+      - image: solidity-ci/toolchain
+    working_directory: ~/solidity-ci
+    steps:
+      - checkout
+      - run: cp /scripts/processor.py ~/solidity-ci/processor.py
+      - run: python processor.py
+      - store_artifacts:
+          path: test-results.log
+          prefix: logs
+
